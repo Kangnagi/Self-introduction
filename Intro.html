@@ -1,332 +1,86 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>자기소개</title>
-    <style>
-        :root {
-            --lacquer:      #0a0906;
-            --lacquer-card: #131009;
-            --pearl-cream:  #f0e6d3;
-            --pearl-gold:   #d4af70;
-            --pearl-teal:   #9ecfcc;
-            --pearl-purple: #c8b4d8;
-            --pearl-pink:   #e8b4c8;
-            --text-main:    #e0d4bc;
-            --text-sub:     #8a7a60;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Noto Serif KR', 'Georgia', serif;
-            background-color: var(--lacquer);
-            color: var(--text-main);
-            overflow-x: hidden;
-        }
-
-        /* ── 배경 입자 (자개 조각이 떠다니는 느낌) ── */
-        #pearl-canvas {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* ── 헤더 ── */
-        header {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            padding: 110px 20px 80px;
-            background: radial-gradient(ellipse at 50% 60%, #221c10 0%, var(--lacquer) 70%);
-        }
-
-        /* 나전칠기 전통 격자 패턴 배경 (CSS만으로) */
-        header::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image:
-                repeating-linear-gradient(45deg,  rgba(212,175,112,0.04) 0px, rgba(212,175,112,0.04) 1px, transparent 1px, transparent 28px),
-                repeating-linear-gradient(-45deg, rgba(212,175,112,0.04) 0px, rgba(212,175,112,0.04) 1px, transparent 1px, transparent 28px);
-            pointer-events: none;
-        }
-
-        header h1 {
-            font-size: 3rem;
-            letter-spacing: 0.15em;
-            background: linear-gradient(120deg,
-                var(--pearl-cream), var(--pearl-gold),
-                var(--pearl-teal), var(--pearl-purple),
-                var(--pearl-pink), var(--pearl-gold),
-                var(--pearl-cream));
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: shimmer 7s ease infinite;
-        }
-
-        /* 자개 구분선 */
-        .nacre-line {
-            width: 160px;
-            height: 1px;
-            margin: 20px auto;
-            background: linear-gradient(90deg,
-                transparent, var(--pearl-gold), var(--pearl-teal),
-                var(--pearl-purple), transparent);
-            background-size: 200% 200%;
-            animation: shimmer 5s ease infinite;
-        }
-
-        header .tagline {
-            color: var(--text-sub);
-            font-size: 1rem;
-            letter-spacing: 0.25em;
-        }
-
-        @keyframes shimmer {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* ── 본문 ── */
-        main {
-            position: relative;
-            z-index: 1;
-            max-width: 820px;
-            margin: 0 auto;
-            padding: 20px 20px 80px;
-        }
-
-        /* ── 섹션 카드 (나전칠기 테두리) ── */
-        section {
-            position: relative;
-            background: var(--lacquer-card);
-            border-radius: 3px;
-            padding: 32px 34px;
-            margin-bottom: 22px;
-
-            /* 스크롤 등장 초기 상태 */
-            opacity: 0;
-            transform: translateY(28px);
-            transition: opacity 0.65s ease, transform 0.65s ease;
-        }
-
-        /* 자개 그라디언트 테두리: ::before 를 z-index:-1 로 깔기 */
-        section::before {
-            content: '';
-            position: absolute;
-            inset: -1px;
-            border-radius: 4px;
-            background: linear-gradient(135deg,
-                var(--pearl-gold), var(--pearl-teal),
-                var(--pearl-purple), var(--pearl-pink),
-                var(--pearl-gold));
-            background-size: 300% 300%;
-            animation: shimmer 9s ease infinite;
-            z-index: -1;
-        }
-
-        /* 호버 시 은은한 진주 광택 */
-        section::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 3px;
-            background: radial-gradient(ellipse at 30% 40%, rgba(212,175,112,0.06) 0%, transparent 65%);
-            opacity: 0;
-            transition: opacity 0.4s;
-            pointer-events: none;
-        }
-        section:hover::after { opacity: 1; }
-
-        section.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        section h2 {
-            font-size: 1.05rem;
-            letter-spacing: 0.2em;
-            color: var(--pearl-gold);
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* 나전 장식 아이콘 */
-        section h2::before {
-            content: '◈';
-            font-size: 0.8rem;
-            color: var(--pearl-teal);
-            animation: iconPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes iconPulse {
-            0%, 100% { opacity: 1; }
-            50%       { opacity: 0.4; }
-        }
-
-        section p, section li {
-            font-size: 0.95rem;
-            line-height: 1.95;
-            color: var(--text-main);
-        }
-
-        section ul { padding-left: 18px; }
-        section li::marker { color: var(--pearl-gold); }
-
-        /* ── 푸터 ── */
-        footer {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            padding: 28px;
-            font-size: 0.82rem;
-            color: var(--text-sub);
-            border-top: 1px solid rgba(212,175,112,0.12);
-        }
-    </style>
+    <title>강찬희 자기소개</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+    <header>
+        <div class="header-top">
+            <img src="profile.jpg" alt="강찬희" class="profile-img">
+            <h1>안녕하세요, 강찬희입니다. 잘 부탁드립니다!</h1>
+        </div>
+    </header>
 
-<canvas id="pearl-canvas"></canvas>
+    <main>
+        <section id="about">
+            <h2>프로필</h2>
+            <p>학교 : 한경국립대학교</p>
+            <p>전공 : AI반도체융합전공</p>
+            <p>생년월일 : 2002.04.14</p>
+        </section>
 
-<header>
-    <h1>이름</h1>
-    <div class="nacre-line"></div>
-    <p class="tagline">한 줄 소개</p>
-</header>
+        <section id="interests">
+            <h2>관심사</h2>
+            <ul>
+                <li>소프트웨어 프로그래밍</li>
+                <li>반도체 설계</li>
+                <li class="soccer-egg">축구</li>
+            </ul>
+        </section>
 
-<main>
-    <section id="about">
-        <h2>기본 정보</h2>
-        <p>학교 / 전공 / 나이 등</p>
-    </section>
+        <section id="skills">
+            <h2>기술 및 능력</h2>
+            <h3>컴퓨터 분야</h3>
+            <ul>
+                <li>C/C++</li>
+                <li>Python</li>
+                <li>HTML5 + CSS3 + JavaScript</li>
+                <li>Git/GitHub</li>
+            </ul>
+            <h3>반도체 분야</h3>
+            <ul>
+                <li>Cadence Virtuoso를 활용한 CMOS 회로 설계 및 시뮬레이션</li>
+                <li>Layout 설계 및 DRC, LVS 검증</li>
+            </ul>
+        </section>
 
-    <section id="interests">
-        <h2>관심사</h2>
-        <ul>
-            <li>관심사 1</li>
-            <li>관심사 2</li>
-            <li>관심사 3</li>
-        </ul>
-    </section>
+        <section id="experience">
+            <h2>경험 및 활동</h2>
+            <h3>22학년도</h3>
+            <ul>
+                <li>새라 총학생회 부회장</li>
+            </ul>
+            <h3>21학년도</h3>
+            <ul>
+                <li>AI반도체융합과 학회장</li>
+                <li>교내 창업경진대회 대상</li>
+                <li>교외 창업경진대회 동상 (한경국립대 안성캠퍼스)</li>
+            </ul>
+        </section>
 
-    <section id="skills">
-        <h2>기술 및 능력</h2>
-        <ul>
-            <li>기술 1</li>
-            <li>기술 2</li>
-        </ul>
-    </section>
+        <section id="goal">
+            <h2>목표</h2>
+            <p>전세계적으로 많은 사람들에게 즐거움과 유용한 서비스, 콘텐츠를 제공하는
+                저의 회사를 운영하는 것이 목표입니다.</p>
+        </section>
 
-    <section id="experience">
-        <h2>경험 및 활동</h2>
-        <p>경험이나 활동 내용</p>
-    </section>
+        <section id="contact">
+            <h2>연락처</h2>
+            <p>이메일: <a href="mailto:kch3630@gmail.com">kch3630@gmail.com</a></p>
+            <p>GitHub: <a href="https://github.com/Kangnagi" target="_blank" rel="noopener">github.com/Kangnagi</a></p>
+        </section>
+    </main>
 
-    <section id="goal">
-        <h2>목표</h2>
-        <p>앞으로의 목표나 포부</p>
-    </section>
+    <footer>
+        <p>© 2026 kangchanhee. All rights reserved.</p>
+    </footer>
 
-    <section id="contact">
-        <h2>연락처</h2>
-        <p>이메일: </p>
-        <p>GitHub / 기타: </p>
-    </section>
-</main>
-
-<footer>
-    <p>© 2026 이름. All rights reserved.</p>
-</footer>
-
-<script>
-// ── 1. 자개 입자 (떠오르는 진주 조각) ──────────────────────────────
-const canvas = document.getElementById('pearl-canvas');
-const ctx    = canvas.getContext('2d');
-
-function resize() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
-
-const COLORS = [
-    [240, 230, 211],   // cream
-    [212, 175, 112],   // gold
-    [158, 207, 204],   // teal
-    [200, 180, 216],   // purple
-    [232, 180, 200],   // pink
-];
-
-class Particle {
-    constructor(initY) {
-        this.init(initY ?? canvas.height + 10);
-    }
-    init(startY) {
-        this.x     = Math.random() * canvas.width;
-        this.y     = startY;
-        this.r     = Math.random() * 1.8 + 0.4;
-        this.vy    = -(Math.random() * 0.35 + 0.08);
-        this.vx    = (Math.random() - 0.5) * 0.25;
-        this.alpha = Math.random() * 0.45 + 0.1;
-        this.rgb   = COLORS[Math.floor(Math.random() * COLORS.length)];
-        this.glow  = this.r * 4;
-    }
-    update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        if (this.y < -12) this.init(canvas.height + 10);
-    }
-    draw() {
-        const [r, g, b] = this.rgb;
-        const grd = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.glow);
-        grd.addColorStop(0,   `rgba(${r},${g},${b},${this.alpha})`);
-        grd.addColorStop(0.4, `rgba(${r},${g},${b},${this.alpha * 0.3})`);
-        grd.addColorStop(1,   'transparent');
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.glow, 0, Math.PI * 2);
-        ctx.fillStyle = grd;
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${r},${g},${b},${Math.min(this.alpha * 2, 0.85)})`;
-        ctx.fill();
-    }
-}
-
-// 처음엔 화면 전체에 흩뿌려서 시작
-const particles = Array.from({ length: 70 }, () =>
-    new Particle(Math.random() * window.innerHeight)
-);
-
-(function loop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => { p.update(); p.draw(); });
-    requestAnimationFrame(loop);
-})();
-
-// ── 2. 스크롤 등장 (IntersectionObserver) ─────────────────────────
-const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-        if (e.isIntersecting) {
-            e.target.classList.add('visible');
-            io.unobserve(e.target);
-        }
-    });
-}, { threshold: 0.12 });
-
-document.querySelectorAll('section').forEach(s => io.observe(s));
-</script>
-
+    <script src="script.js"></script>
 </body>
+
 </html>
